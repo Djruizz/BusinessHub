@@ -12,7 +12,7 @@ const OUTPUT_INDEX = path.resolve(__dirname, '../index.html');
 
 function buildHtmlReport() {
   const leads = JSON.parse(fs.readFileSync(ENRICHED_FILE, 'utf-8'));
-  console.log(`Generating 100% responsive HTML report for ${leads.length} leads...`);
+  console.log(`Generating responsive HTML report with CRM pipeline status select for ${leads.length} leads...`);
 
   // Aggregate stats
   const totalLeads = leads.length;
@@ -77,6 +77,12 @@ function buildHtmlReport() {
       --wa-color: #25d366;
       --wa-glow: rgba(37, 211, 102, 0.2);
       
+      --status-sin: #64748b;
+      --status-contactada: #38bdf8;
+      --status-proceso: #f59e0b;
+      --status-rechazada: #f43f5e;
+      --status-confirmada: #10b981;
+      
       --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
       --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.75);
       --header-bg: rgba(7, 17, 28, 0.88);
@@ -105,6 +111,12 @@ function buildHtmlReport() {
       
       --wa-color: #128c7e;
       --wa-glow: rgba(18, 140, 126, 0.18);
+      
+      --status-sin: #64748b;
+      --status-contactada: #0284c7;
+      --status-proceso: #d97706;
+      --status-rechazada: #e11d48;
+      --status-confirmada: #059669;
       
       --card-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.06);
       --card-shadow-hover: 0 18px 32px -8px rgba(15, 23, 42, 0.12);
@@ -541,7 +553,7 @@ function buildHtmlReport() {
 
     .toolbar-top {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
       gap: 10px;
       margin-bottom: 14px;
     }
@@ -553,9 +565,9 @@ function buildHtmlReport() {
       align-items: center;
     }
 
-    @media (min-width: 900px) {
+    @media (min-width: 1024px) {
       .toolbar-top {
-        grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+        grid-template-columns: 2fr 1.1fr 1.1fr 1.1fr 1fr;
       }
       .search-box {
         grid-column: span 1;
@@ -693,10 +705,26 @@ function buildHtmlReport() {
       border-color: var(--border-accent);
     }
 
-    .lead-card.is-contacted {
-      opacity: 0.88;
-      border-color: rgba(16, 185, 129, 0.45);
-      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.05) 100%);
+    /* Status-specific card highlights */
+    .lead-card.card-status-confirmada {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.07) 100%);
+    }
+
+    .lead-card.card-status-en_proceso {
+      border-color: rgba(245, 158, 11, 0.45);
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.05) 100%);
+    }
+
+    .lead-card.card-status-contactada {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(56, 189, 248, 0.04) 100%);
+    }
+
+    .lead-card.card-status-rechazada {
+      opacity: 0.65;
+      filter: grayscale(15%);
+      border-color: rgba(244, 63, 94, 0.35);
     }
 
     .card-top {
@@ -934,7 +962,7 @@ function buildHtmlReport() {
       min-height: 36px;
     }
 
-    /* CRM SECTION */
+    /* CRM SECTION WITH STATUS SELECT */
     .crm-section {
       background: var(--badge-bg);
       border-top: 1px solid var(--border);
@@ -943,61 +971,81 @@ function buildHtmlReport() {
       border-radius: 0 0 18px 18px;
     }
 
-    .crm-contact-row {
+    .crm-header-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 8px;
       margin-bottom: 8px;
       flex-wrap: wrap;
     }
 
-    .crm-checkbox-label {
+    .crm-status-group {
       display: flex;
       align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      user-select: none;
+      gap: 6px;
+      flex: 1;
+      min-width: 170px;
     }
 
-    .crm-checkbox {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 19px;
-      height: 19px;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg-card);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition);
-      position: relative;
+    .crm-status-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       flex-shrink: 0;
     }
 
-    .crm-checkbox:checked {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-
-    .crm-checkbox:checked::after {
-      content: '✓';
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .crm-label {
+    .crm-status-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-family: var(--font-main);
       font-size: 12px;
       font-weight: 600;
       color: var(--text);
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+      flex: 1;
+      min-height: 32px;
+    }
+
+    .crm-status-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    .crm-status-select.select-sin_contactar {
+      color: var(--text-dim);
+      border-color: var(--border);
+    }
+    .crm-status-select.select-contactada {
+      color: var(--status-contactada);
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.06);
+    }
+    .crm-status-select.select-en_proceso {
+      color: var(--status-proceso);
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.06);
+    }
+    .crm-status-select.select-confirmada {
+      color: var(--status-confirmada);
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .crm-status-select.select-rechazada {
+      color: var(--status-rechazada);
+      border-color: rgba(244, 63, 94, 0.4);
+      background: rgba(244, 63, 94, 0.06);
     }
 
     .crm-timestamp {
       font-size: 11px;
       color: var(--text-dim);
-      margin-left: auto;
       white-space: nowrap;
     }
 
@@ -1110,7 +1158,7 @@ function buildHtmlReport() {
         width: 100%;
       }
       .crm-progress-bar {
-        width: 140px;
+        width: 130px;
       }
       .toast {
         left: 20px;
@@ -1129,7 +1177,7 @@ function buildHtmlReport() {
         <div class="brand-logo">BH</div>
         <div class="brand-text">
           <h1>BusinessHub · GDL Sur</h1>
-          <p>Prospección y Contacto de Negocios</p>
+          <p>Prospección y Pipeline de Negocios</p>
         </div>
       </div>
       <div class="nav-actions">
@@ -1149,7 +1197,7 @@ function buildHtmlReport() {
     <section class="hero">
       <div class="badge-agency">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-        Prospección y Contacto Multicanal
+        Pipeline Comercial de Ventas
       </div>
       <h2 class="hero-title">Negocios con Citas en Guadalajara Sur</h2>
       <p class="hero-subtitle">
@@ -1222,6 +1270,15 @@ function buildHtmlReport() {
           ${Object.entries(categoriesMap).sort((a,b)=>b[1]-a[1]).map(([c, cnt]) => `<option value="${c}">${c} (${cnt})</option>`).join('')}
         </select>
 
+        <select class="select-field" id="statusFilter">
+          <option value="">Todos los Estados (CRM)</option>
+          <option value="sin_contactar">⏳ Sin contactar</option>
+          <option value="contactada">📬 Contactada</option>
+          <option value="en_proceso">🔄 En proceso</option>
+          <option value="confirmada">🎯 Confirmada</option>
+          <option value="rechazada">❌ Rechazada</option>
+        </select>
+
         <select class="select-field" id="sortSelect">
           <option value="score_desc">Puntuación: Mayor a Menor</option>
           <option value="score_asc">Puntuación: Menor a Mayor</option>
@@ -1237,12 +1294,10 @@ function buildHtmlReport() {
           <button class="pill-btn" data-pill-web="con_web">Con Sitio Web</button>
           <button class="pill-btn" data-pill-web="redes">Redes Sociales</button>
           <button class="pill-btn" data-pill-web="sin_web">Sin Web (Oportunidad)</button>
-          <button class="pill-btn" data-pill-status="contactados">Solo Contactados</button>
-          <button class="pill-btn" data-pill-status="pendientes">Pendientes</button>
         </div>
 
         <div class="crm-progress-wrap">
-          <span id="crmProgressText">0 / ${totalLeads} contactados (0%)</span>
+          <span id="crmProgressText">0 / ${totalLeads} gestionados (0%)</span>
           <div class="crm-progress-bar">
             <div class="crm-progress-fill" id="crmProgressFill"></div>
           </div>
@@ -1258,7 +1313,7 @@ function buildHtmlReport() {
 
   <footer>
     <div class="container">
-      <p>BusinessHub · Prospección y Contacto Comercial en el Sur de Guadalajara. Datos sincronizados con Google Maps y persistencia local.</p>
+      <p>BusinessHub · Pipeline de Prospección y Ventas en el Sur de Guadalajara. Datos sincronizados con Google Maps y persistencia local.</p>
     </div>
   </footer>
 
@@ -1276,6 +1331,17 @@ function buildHtmlReport() {
     let crmState = {};
     try {
       crmState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      // Normalize older state
+      Object.keys(crmState).forEach(id => {
+        const item = crmState[id];
+        if (!item.status) {
+          if (item.contacted || item.called) {
+            item.status = 'contactada';
+          } else {
+            item.status = 'sin_contactar';
+          }
+        }
+      });
     } catch(e) {
       crmState = {};
     }
@@ -1285,7 +1351,7 @@ function buildHtmlReport() {
       zone: '',
       category: '',
       webType: '',
-      status: '', // 'contactados' | 'pendientes' | ''
+      status: '', // 'sin_contactar' | 'contactada' | 'en_proceso' | 'confirmada' | 'rechazada' | ''
       sortBy: 'score_desc',
       chartView: 'zona'
     };
@@ -1295,6 +1361,7 @@ function buildHtmlReport() {
     const searchInput = document.getElementById('searchInput');
     const zoneFilter = document.getElementById('zoneFilter');
     const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter = document.getElementById('statusFilter');
     const sortSelect = document.getElementById('sortSelect');
     const chartBarsContainer = document.getElementById('chartBarsContainer');
     const crmProgressText = document.getElementById('crmProgressText');
@@ -1336,27 +1403,12 @@ function buildHtmlReport() {
       });
     });
 
-    // Pill filters
+    // Pill filters (Web)
     document.querySelectorAll('[data-pill-web]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-pill-web]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeFilter.webType = btn.getAttribute('data-pill-web');
-        renderLeads();
-      });
-    });
-
-    document.querySelectorAll('[data-pill-status]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const val = btn.getAttribute('data-pill-status');
-        if (btn.classList.contains('active')) {
-          btn.classList.remove('active');
-          activeFilter.status = '';
-        } else {
-          document.querySelectorAll('[data-pill-status]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          activeFilter.status = val;
-        }
         renderLeads();
       });
     });
@@ -1374,6 +1426,11 @@ function buildHtmlReport() {
 
     categoryFilter.addEventListener('change', (e) => {
       activeFilter.category = e.target.value;
+      renderLeads();
+    });
+
+    statusFilter.addEventListener('change', (e) => {
+      activeFilter.status = e.target.value;
       renderLeads();
     });
 
@@ -1476,10 +1533,11 @@ function buildHtmlReport() {
           return false;
         }
 
-        // Status
-        const isContacted = crmState[l.id]?.contacted;
-        if (activeFilter.status === 'contactados' && !isContacted) return false;
-        if (activeFilter.status === 'pendientes' && isContacted) return false;
+        // Status Filter
+        const leadStatus = crmState[l.id]?.status || 'sin_contactar';
+        if (activeFilter.status && leadStatus !== activeFilter.status) {
+          return false;
+        }
 
         return true;
       });
@@ -1503,15 +1561,15 @@ function buildHtmlReport() {
           <div class="empty-state">
             <div class="empty-icon">🔍</div>
             <h3>No se encontraron empresas con los filtros aplicados</h3>
-            <p>Intenta cambiar los términos de búsqueda o restablecer los filtros de zona y giro.</p>
+            <p>Intenta cambiar los términos de búsqueda o restablecer los filtros de zona, giro o estado.</p>
           </div>
         \`;
         return;
       }
 
       leadsGrid.innerHTML = filtered.map(lead => {
-        const crmItem = crmState[lead.id] || { contacted: false, notes: '', date: '' };
-        const isContacted = crmItem.contacted;
+        const crmItem = crmState[lead.id] || { status: 'sin_contactar', notes: '', date: '' };
+        const statusVal = crmItem.status || 'sin_contactar';
         const notes = crmItem.notes || '';
         const contactDate = crmItem.date ? new Date(crmItem.date).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
 
@@ -1553,7 +1611,7 @@ function buildHtmlReport() {
         }
 
         return \`
-          <div class="lead-card \${isContacted ? 'is-contacted' : ''}" id="card_\${lead.id}">
+          <div class="lead-card card-status-\${statusVal}" id="card_\${lead.id}">
             <div class="card-top">
               <div class="card-title-group">
                 <span class="lead-category">\${escapeHtml(lead.category)}</span>
@@ -1613,15 +1671,19 @@ function buildHtmlReport() {
               \${waBtn}
             </div>
 
-            <!-- CRM Section -->
+            <!-- CRM Section with Status Select -->
             <div class="crm-section">
-              <div class="crm-contact-row">
-                <label class="crm-checkbox-label" for="chk_\${lead.id}">
-                  <input type="checkbox" class="crm-checkbox" id="chk_\${lead.id}" \${isContacted ? 'checked' : ''} onchange="toggleContacted('\${lead.id}', this.checked)">
-                  <span class="crm-label">
-                    \${isContacted ? '✓ Negocio contactado' : 'Marcar como contactado'}
-                  </span>
-                </label>
+              <div class="crm-header-row">
+                <div class="crm-status-group">
+                  <label class="crm-status-label" for="status_\${lead.id}">Estado:</label>
+                  <select class="crm-status-select select-\${statusVal}" id="status_\${lead.id}" onchange="changeLeadStatus('\${lead.id}', this.value)">
+                    <option value="sin_contactar" \${statusVal === 'sin_contactar' ? 'selected' : ''}>⏳ Sin contactar</option>
+                    <option value="contactada" \${statusVal === 'contactada' ? 'selected' : ''}>📬 Contactada</option>
+                    <option value="en_proceso" \${statusVal === 'en_proceso' ? 'selected' : ''}>🔄 En proceso</option>
+                    <option value="confirmada" \${statusVal === 'confirmada' ? 'selected' : ''}>🎯 Confirmada</option>
+                    <option value="rechazada" \${statusVal === 'rechazada' ? 'selected' : ''}>❌ Rechazada</option>
+                  </select>
+                </div>
                 <span class="crm-timestamp" id="time_\${lead.id}">\${contactDate}</span>
               </div>
               <textarea class="crm-notes-input" id="note_\${lead.id}" placeholder="Notas de contacto (visita presencial, llamada, WhatsApp, quién atendió, objeciones, seguimiento...)" oninput="debouncedSaveNote('\${lead.id}', this.value)">\${escapeHtml(notes)}</textarea>
@@ -1632,36 +1694,56 @@ function buildHtmlReport() {
     }
 
     // CRM Actions
-    function toggleContacted(id, checked) {
-      if (!crmState[id]) crmState[id] = { contacted: false, notes: '', date: '' };
-      crmState[id].contacted = checked;
-      crmState[id].date = checked ? new Date().toISOString() : '';
+    function changeLeadStatus(id, newStatus) {
+      if (!crmState[id]) crmState[id] = { status: 'sin_contactar', notes: '', date: '' };
+      crmState[id].status = newStatus;
+      crmState[id].date = newStatus !== 'sin_contactar' ? new Date().toISOString() : '';
       
       saveCrmState();
 
       const card = document.getElementById(\`card_\${id}\`);
       if (card) {
-        card.classList.toggle('is-contacted', checked);
-        const label = card.querySelector('.crm-label');
-        if (label) label.textContent = checked ? '✓ Negocio contactado' : 'Marcar como contactado';
+        // Remove all previous card-status classes
+        card.className = card.className.replace(/\\bcard-status-\\w+/g, '').trim();
+        card.classList.add(\`card-status-\${newStatus}\`);
+
+        const sel = document.getElementById(\`status_\${id}\`);
+        if (sel) {
+          sel.className = sel.className.replace(/\\bselect-\\w+/g, '').trim();
+          sel.classList.add(\`select-\${newStatus}\`);
+        }
+
         const timeEl = document.getElementById(\`time_\${id}\`);
         if (timeEl) {
-          timeEl.textContent = checked ? new Date().toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          timeEl.textContent = newStatus !== 'sin_contactar' ? new Date().toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
         }
       }
 
       updateProgress();
-      showToast(checked ? 'Negocio marcado como contactado' : 'Contacto desmarcado');
+      
+      const labelMap = {
+        'sin_contactar': 'Marcada como Sin contactar',
+        'contactada': 'Marcada como Contactada',
+        'en_proceso': 'Marcada En proceso',
+        'confirmada': '¡Cita Confirmada! 🎯',
+        'rechazada': 'Marcada como Rechazada'
+      };
+      showToast(labelMap[newStatus] || 'Estado actualizado');
+
+      // If active status filter is set, re-filter smoothly
+      if (activeFilter.status) {
+        renderLeads();
+      }
     }
 
     let noteDebounceTimer = null;
     function debouncedSaveNote(id, text) {
       clearTimeout(noteDebounceTimer);
       noteDebounceTimer = setTimeout(() => {
-        if (!crmState[id]) crmState[id] = { contacted: false, notes: '', date: '' };
+        if (!crmState[id]) crmState[id] = { status: 'sin_contactar', notes: '', date: '' };
         crmState[id].notes = text;
         saveCrmState();
-        showToast('Nota de contacto guardada');
+        showToast('Nota guardada');
       }, 400);
     }
 
@@ -1674,10 +1756,29 @@ function buildHtmlReport() {
     }
 
     function updateProgress() {
-      const contactedCount = Object.values(crmState).filter(c => c.contacted).length;
+      const allItems = Object.values(crmState);
       const total = LEADS_DATA.length;
-      const pct = Math.round((contactedCount / total) * 100);
-      crmProgressText.textContent = \`\${contactedCount} / \${total} contactados (\${pct}%)\`;
+      
+      const counts = {
+        sin_contactar: total,
+        contactada: 0,
+        en_proceso: 0,
+        confirmada: 0,
+        rechazada: 0
+      };
+
+      allItems.forEach(item => {
+        const s = item.status || 'sin_contactar';
+        if (counts[s] !== undefined) {
+          counts[s]++;
+          if (s !== 'sin_contactar') counts.sin_contactar--;
+        }
+      });
+
+      const managedCount = total - counts.sin_contactar;
+      const pct = Math.round((managedCount / total) * 100);
+
+      crmProgressText.textContent = \`\${managedCount} / \${total} gestionados (\${pct}%) · 🎯 \${counts.confirmada} · 🔄 \${counts.en_proceso}\`;
       crmProgressFill.style.width = \`\${pct}%\`;
     }
 
@@ -1702,16 +1803,25 @@ function buildHtmlReport() {
       });
     }
 
-    // Export CSV with user notes
+    // Export CSV with user notes and CRM status
     exportCsvBtn.addEventListener('click', () => {
       const headers = [
         'ID', 'Puntuación', 'Nombre', 'Categoría', 'Teléfono', 'Zona', 'Municipio',
         'Valoración', 'Reseñas', 'Tiene Web', 'Enlace Maps', 'Perfil Decisor',
-        'Contactado', 'Fecha Contacto', 'Notas de Contacto'
+        'Estado CRM', 'Fecha Último Cambio', 'Notas de Contacto'
       ];
+
+      const statusLabels = {
+        'sin_contactar': 'Sin contactar',
+        'contactada': 'Contactada',
+        'en_proceso': 'En proceso',
+        'confirmada': 'Confirmada',
+        'rechazada': 'Rechazada'
+      };
 
       const rows = LEADS_DATA.map(l => {
         const crm = crmState[l.id] || {};
+        const st = crm.status || 'sin_contactar';
         return [
           l.id,
           l.score,
@@ -1725,7 +1835,7 @@ function buildHtmlReport() {
           l.tieneWeb ? 'Sí' : 'No',
           \`"\${escapeCsv(l.mapsUrl)}"\`,
           \`"\${escapeCsv(l.perfilDecisor)}"\`,
-          crm.contacted ? 'Sí' : 'No',
+          \`"\${statusLabels[st] || st}"\`,
           \`"\${escapeCsv(crm.date || '')}"\`,
           \`"\${escapeCsv(crm.notes || '')}"\`
         ].join(',');
@@ -1734,9 +1844,9 @@ function buildHtmlReport() {
       const csvBlob = new Blob(['\\uFEFF' + [headers.join(','), ...rows].join('\\r\\n')], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(csvBlob);
-      link.download = \`leads_gdl_sur_crm_\${new Date().toISOString().slice(0, 10)}.csv\`;
+      link.download = \`leads_gdl_sur_pipeline_\${new Date().toISOString().slice(0, 10)}.csv\`;
       link.click();
-      showToast('Descargando archivo CSV...');
+      showToast('Descargando archivo CSV con pipeline...');
     });
 
     // Helper functions

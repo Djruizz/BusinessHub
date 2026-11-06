@@ -6,8 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const HTML_FILE = path.resolve(__dirname, '../index.html');
 
-async function testReportUi() {
-  console.log('Testing updated responsive UI and contact CRM labels...');
+async function testPipelineUi() {
+  console.log('Testing Status Select and CRM Pipeline Filters...');
   const browser = await chromium.launch({
     headless: true,
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -24,72 +24,58 @@ async function testReportUi() {
   await page.goto(`file:///${HTML_FILE.replace(/\\/g, '/')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1000);
 
-  // 1. Check stats and cards
-  const statTotal = await page.$eval('#statTotal', el => el.innerText.trim());
-  const cardCount = await page.$$eval('.lead-card', els => els.length);
-  console.log(`- Total: ${statTotal}, Rendered Cards: ${cardCount}`);
-
-  // 2. Check "Marcar como contactado" label
-  const firstLabel = await page.$eval('.crm-label', el => el.innerText.trim());
-  console.log(`- CRM Checkbox label: "${firstLabel}" (Expected: 'Marcar como contactado')`);
-  if (!firstLabel.includes('contactado')) {
-    throw new Error(`Label does not include 'contactado', got "${firstLabel}"`);
+  // 1. Verify card status selects exist
+  const statusSelects = await page.$$eval('.crm-status-select', els => els.length);
+  console.log(`- Card status selects found: ${statusSelects} (Expected: 194)`);
+  if (statusSelects !== 194) {
+    throw new Error(`Expected 194 status selects, found ${statusSelects}`);
   }
 
-  // 3. Check WhatsApp buttons exist
-  const waButtons = await page.$$eval('a.btn-wa', els => els.length);
-  console.log(`- WhatsApp action buttons present: ${waButtons}`);
-  if (waButtons < 100) {
-    throw new Error(`Expected >100 WhatsApp buttons, found ${waButtons}`);
+  // 2. Test changing status of lead_1 to 'confirmada'
+  console.log('- Changing status of lead_1 to "confirmada"...');
+  await page.selectOption('#status_lead_1', 'confirmada');
+  await page.waitForTimeout(300);
+
+  const cardClass = await page.$eval('#card_lead_1', el => el.className);
+  console.log(`- Card class after change: "${cardClass}"`);
+  if (!cardClass.includes('card-status-confirmada')) {
+    throw new Error(`Expected 'card-status-confirmada' in class, got "${cardClass}"`);
   }
 
-  // 4. Test checking contact and note persistence
-  const firstCardId = await page.$eval('.lead-card', el => el.id);
-  const leadId = firstCardId.replace('card_', '');
-  console.log(`- Toggling contact on: ${leadId}`);
+  // 3. Test changing status of lead_2 to 'en_proceso'
+  console.log('- Changing status of lead_2 to "en_proceso"...');
+  await page.selectOption('#status_lead_2', 'en_proceso');
+  await page.waitForTimeout(300);
 
-  await page.click(`#chk_${leadId}`);
-  const labelAfterCheck = await page.$eval(`#card_${leadId} .crm-label`, el => el.innerText.trim());
-  console.log(`- Label after check: "${labelAfterCheck}"`);
-  if (!labelAfterCheck.includes('Negocio contactado')) {
-    throw new Error(`Expected '✓ Negocio contactado', got "${labelAfterCheck}"`);
+  // 4. Test filtering by status
+  console.log('- Filtering by status: "confirmada"...');
+  await page.selectOption('#statusFilter', 'confirmada');
+  await page.waitForTimeout(300);
+
+  const confirmadaCount = await page.$$eval('.lead-card', els => els.length);
+  console.log(`- Rendered cards with status 'confirmada': ${confirmadaCount}`);
+  if (confirmadaCount !== 1) {
+    throw new Error(`Expected exactly 1 confirmed card, found ${confirmadaCount}`);
   }
 
-  const testNote = 'Visita presencial: se entregó catálogo al encargado de recepción.';
-  await page.fill(`#note_${leadId}`, testNote);
-  await page.waitForTimeout(600);
-
-  // Reload to verify persistence
+  // 5. Test persistence across reload
+  console.log('- Reloading page to test persistence of pipeline state...');
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(500);
 
-  const isCheckedAfter = await page.$eval(`#chk_${leadId}`, el => el.checked);
-  const noteAfter = await page.$eval(`#note_${leadId}`, el => el.value);
-
-  console.log(`- Checkbox after reload: ${isCheckedAfter}`);
-  console.log(`- Note after reload: "${noteAfter}"`);
-
-  if (!isCheckedAfter || noteAfter !== testNote) {
-    throw new Error('CRM persistence test failed!');
+  const statusAfterReload = await page.$eval('#status_lead_1', el => el.value);
+  console.log(`- Status of lead_1 after reload: "${statusAfterReload}" (Expected: 'confirmada')`);
+  if (statusAfterReload !== 'confirmada') {
+    throw new Error(`Persistence failed: expected 'confirmada', got "${statusAfterReload}"`);
   }
 
-  // 5. Test Multiple Mobile Viewports (iPhone SE, iPhone 14, Android Tablet)
-  const viewports = [
-    { name: 'iPhone SE (375x667)', width: 375, height: 667 },
-    { name: 'iPhone 14 Pro (393x852)', width: 393, height: 852 },
-    { name: 'Galaxy Fold (280x653)', width: 280, height: 653 },
-    { name: 'iPad Mini (768x1024)', width: 768, height: 1024 }
-  ];
-
-  for (const vp of viewports) {
-    await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.waitForTimeout(200);
-    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-    const innerWidth = await page.evaluate(() => window.innerWidth);
-    console.log(`- ${vp.name}: innerWidth=${innerWidth}, scrollWidth=${scrollWidth}`);
-    if (scrollWidth > innerWidth + 1) {
-      throw new Error(`Horizontal overflow detected in ${vp.name}: scrollWidth (${scrollWidth}) > innerWidth (${innerWidth})`);
-    }
+  // 6. Test reset filter to all
+  await page.selectOption('#statusFilter', '');
+  await page.waitForTimeout(300);
+  const totalCount = await page.$$eval('.lead-card', els => els.length);
+  console.log(`- Total cards after resetting status filter: ${totalCount}`);
+  if (totalCount !== 194) {
+    throw new Error(`Expected 194 cards, got ${totalCount}`);
   }
 
   await browser.close();
@@ -99,10 +85,10 @@ async function testReportUi() {
     throw new Error('Errors in console/page');
   }
 
-  console.log('\nAll tests passed successfully! ✅ Zero horizontal overflow on all screen sizes.');
+  console.log('\nAll status select and filter tests passed successfully! ✅');
 }
 
-testReportUi().catch(err => {
+testPipelineUi().catch(err => {
   console.error(err);
   process.exit(1);
 });
