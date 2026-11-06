@@ -2,16 +2,16 @@
 <html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Prospecting Intelligence · Leads GDL Sur (Santa Cruz del Valle y Alrededores)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-display: 'Space Grotesk', -apple-system, sans-serif;
-      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     [data-theme="dark"] {
@@ -21,22 +21,25 @@
       --bg-card-hover: #122b44;
       --bg-input: #071524;
       --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(16, 185, 129, 0.25);
+      --border-accent: rgba(16, 185, 129, 0.28);
       --text: #f1f5f9;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
       
       --primary: #10b981;
-      --primary-glow: rgba(16, 185, 129, 0.2);
+      --primary-glow: rgba(16, 185, 129, 0.22);
       --primary-dark: #064e3b;
       --primary-light: #34d399;
       
       --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.15);
+      --accent-glow: rgba(56, 189, 248, 0.16);
       
-      --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-      --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-      --header-bg: rgba(7, 17, 28, 0.85);
+      --wa-color: #25d366;
+      --wa-glow: rgba(37, 211, 102, 0.2);
+      
+      --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
+      --card-shadow-hover: 0 20px 40px -15px rgba(0, 0, 0, 0.75);
+      --header-bg: rgba(7, 17, 28, 0.88);
       --badge-bg: rgba(255, 255, 255, 0.05);
     }
 
@@ -46,23 +49,26 @@
       --bg-card: #ffffff;
       --bg-card-hover: #f8fafc;
       --bg-input: #f1f5f9;
-      --border: rgba(15, 23, 42, 0.08);
-      --border-accent: rgba(5, 150, 105, 0.3);
+      --border: rgba(15, 23, 42, 0.09);
+      --border-accent: rgba(5, 150, 105, 0.35);
       --text: #0f172a;
       --text-muted: #475569;
       --text-dim: #94a3b8;
       
       --primary: #059669;
-      --primary-glow: rgba(5, 150, 105, 0.15);
+      --primary-glow: rgba(5, 150, 105, 0.16);
       --primary-dark: #064e3b;
       --primary-light: #10b981;
       
       --accent: #0284c7;
-      --accent-glow: rgba(2, 132, 199, 0.12);
+      --accent-glow: rgba(2, 132, 199, 0.14);
       
-      --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
-      --card-shadow-hover: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
-      --header-bg: rgba(255, 255, 255, 0.9);
+      --wa-color: #128c7e;
+      --wa-glow: rgba(18, 140, 126, 0.18);
+      
+      --card-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.06);
+      --card-shadow-hover: 0 18px 32px -8px rgba(15, 23, 42, 0.12);
+      --header-bg: rgba(255, 255, 255, 0.92);
       --badge-bg: rgba(15, 23, 42, 0.04);
     }
 
@@ -70,6 +76,11 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
     }
 
     body {
@@ -80,17 +91,16 @@
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.3s ease, color 0.3s ease;
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
     /* Ambient background gradient */
     body::before {
       content: '';
       position: fixed;
-      top: -20%;
-      left: -10%;
-      width: 60vw;
-      height: 60vw;
+      top: -20vw;
+      left: -10vw;
+      width: 50vw;
+      height: 50vw;
       background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
@@ -99,19 +109,20 @@
     body::after {
       content: '';
       position: fixed;
-      bottom: -20%;
-      right: -10%;
-      width: 60vw;
-      height: 60vw;
+      bottom: -20vw;
+      right: -10vw;
+      width: 50vw;
+      height: 50vw;
       background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
 
     .container {
+      width: 100%;
       max-width: 1360px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 clamp(12px, 3vw, 24px);
       position: relative;
       z-index: 1;
     }
@@ -125,7 +136,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 14px 0;
+      padding: 12px 0;
       transition: var(--transition);
     }
 
@@ -133,18 +144,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
     }
 
     .brand-logo {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
       background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
       display: flex;
@@ -152,16 +165,24 @@
       justify-content: center;
       color: #fff;
       font-weight: 800;
-      font-size: 18px;
+      font-size: 17px;
       box-shadow: 0 4px 12px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      min-width: 0;
     }
 
     .brand-text h1 {
       font-family: var(--font-display);
-      font-size: 16px;
+      font-size: clamp(14px, 2.5vw, 17px);
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .brand-text p {
@@ -170,22 +191,27 @@
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 8px 14px;
+      gap: 6px;
+      padding: 8px 12px;
+      min-height: 38px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid var(--border);
@@ -194,12 +220,18 @@
       transition: var(--transition);
       text-decoration: none;
       white-space: nowrap;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn:hover {
       background: var(--bg-card-hover);
       border-color: var(--text-dim);
       transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
 
     .btn-primary {
@@ -215,9 +247,21 @@
       color: #064e3b;
     }
 
+    .btn-wa {
+      background: var(--wa-color);
+      color: #ffffff !important;
+      border-color: transparent;
+      box-shadow: 0 4px 12px var(--wa-glow);
+    }
+
+    .btn-wa:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
     /* HERO SECTION */
     .hero {
-      padding: 40px 0 28px;
+      padding: clamp(24px, 4vw, 40px) 0 clamp(18px, 3vw, 28px);
       text-align: center;
     }
 
@@ -234,7 +278,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     [data-theme="light"] .badge-agency {
@@ -243,36 +287,37 @@
 
     .hero-title {
       font-family: var(--font-display);
-      font-size: clamp(28px, 4.5vw, 44px);
+      font-size: clamp(24px, 4.2vw, 42px);
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.15;
-      margin-bottom: 14px;
+      line-height: 1.18;
+      margin-bottom: 12px;
       background: linear-gradient(135deg, var(--text) 30%, var(--primary-light) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-subtitle {
-      font-size: clamp(14px, 2vw, 17px);
+      font-size: clamp(13px, 1.8vw, 16px);
       color: var(--text-muted);
       max-width: 720px;
-      margin: 0 auto 32px;
+      margin: 0 auto 28px;
+      padding: 0 8px;
     }
 
     /* 4 STATS ROW */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 36px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 14px;
+      margin-bottom: 30px;
     }
 
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 22px 20px;
+      padding: clamp(16px, 2.5vw, 22px);
       position: relative;
       overflow: hidden;
       box-shadow: var(--card-shadow);
@@ -282,7 +327,7 @@
     }
 
     .stat-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: var(--card-shadow-hover);
       border-color: var(--border-accent);
     }
@@ -299,22 +344,22 @@
     }
 
     .stat-label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .stat-value {
       font-family: var(--font-display);
-      font-size: clamp(28px, 3.2vw, 38px);
+      font-size: clamp(26px, 3.5vw, 36px);
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text);
       line-height: 1.1;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -328,29 +373,33 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 26px;
+      padding: clamp(16px, 3vw, 24px);
       box-shadow: var(--card-shadow);
-      margin-bottom: 36px;
+      margin-bottom: 28px;
     }
 
     .chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
       gap: 12px;
     }
 
+    .chart-title-wrap {
+      min-width: 0;
+    }
+
     .chart-title-wrap h3 {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: clamp(15px, 2vw, 18px);
       font-weight: 700;
       letter-spacing: -0.01em;
     }
 
     .chart-title-wrap p {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
     }
 
@@ -360,39 +409,41 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 3px;
-      gap: 4px;
+      gap: 3px;
+      max-width: 100%;
+      overflow-x: auto;
     }
 
     .chart-tab {
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       background: transparent;
       color: var(--text-dim);
       border: none;
       cursor: pointer;
       transition: var(--transition);
+      white-space: nowrap;
     }
 
     .chart-tab.active {
       background: var(--bg-card);
       color: var(--text);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .chart-bars-wrap {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding-top: 8px;
+      gap: 10px;
     }
 
     .chart-bar-row {
       display: grid;
-      grid-template-columns: 220px 1fr 70px;
+      grid-template-columns: minmax(110px, 210px) 1fr 65px;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       cursor: pointer;
       padding: 6px 8px;
       border-radius: 8px;
@@ -404,7 +455,7 @@
     }
 
     .chart-bar-label {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
@@ -414,26 +465,28 @@
     .chart-track {
       background: var(--bg-input);
       border-radius: 6px;
-      height: 20px;
+      height: 18px;
       overflow: hidden;
       position: relative;
+      min-width: 40px;
     }
 
     .chart-fill {
       height: 100%;
       border-radius: 6px;
       background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
 
     .chart-bar-value {
       text-align: right;
       font-family: var(--font-display);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-muted);
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     /* CONTROLS TOOLBAR */
@@ -441,27 +494,37 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px;
+      padding: clamp(14px, 2.5vw, 20px);
       box-shadow: var(--card-shadow);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .toolbar-top {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
     .search-box {
+      grid-column: 1 / -1;
       position: relative;
       display: flex;
       align-items: center;
     }
 
+    @media (min-width: 900px) {
+      .toolbar-top {
+        grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+      }
+      .search-box {
+        grid-column: span 1;
+      }
+    }
+
     .search-icon {
       position: absolute;
-      left: 14px;
+      left: 12px;
       color: var(--text-dim);
       pointer-events: none;
       display: flex;
@@ -475,14 +538,15 @@
       font-family: var(--font-main);
       font-size: 13px;
       font-weight: 500;
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-radius: 10px;
       outline: none;
       transition: var(--transition);
+      min-height: 40px;
     }
 
     .search-box .input-field {
-      padding-left: 40px;
+      padding-left: 36px;
     }
 
     .input-field:focus, .select-field:focus {
@@ -495,27 +559,31 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14px;
-      padding-top: 14px;
+      gap: 12px;
+      padding-top: 12px;
       border-top: 1px solid var(--border);
     }
 
     .filter-pills {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .pill-btn {
       padding: 6px 12px;
+      min-height: 32px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--badge-bg);
       color: var(--text-muted);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
+      white-space: nowrap;
+      user-select: none;
     }
 
     .pill-btn:hover {
@@ -533,18 +601,20 @@
     .crm-progress-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 13px;
+      gap: 10px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
+      margin-left: auto;
     }
 
     .crm-progress-bar {
-      width: 140px;
+      width: 120px;
       height: 8px;
       background: var(--bg-input);
       border-radius: 999px;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .crm-progress-fill {
@@ -558,9 +628,9 @@
     /* LEADS GRID */
     .leads-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
-      gap: 22px;
-      margin-bottom: 60px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+      gap: 18px;
+      margin-bottom: 50px;
     }
 
     /* LEAD CARD */
@@ -568,36 +638,38 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 22px;
+      padding: clamp(16px, 2.5vw, 22px);
       box-shadow: var(--card-shadow);
       transition: var(--transition);
       display: flex;
       flex-direction: column;
       position: relative;
+      min-width: 0;
     }
 
     .lead-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: var(--card-shadow-hover);
       border-color: var(--border-accent);
     }
 
-    .lead-card.is-called {
+    .lead-card.is-contacted {
       opacity: 0.88;
-      border-color: rgba(16, 185, 129, 0.4);
-      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.04) 100%);
+      border-color: rgba(16, 185, 129, 0.45);
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.05) 100%);
     }
 
     .card-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .card-title-group {
       flex: 1;
+      min-width: 0;
     }
 
     .lead-category {
@@ -607,15 +679,16 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--primary);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .lead-name {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: clamp(16px, 2vw, 18px);
       font-weight: 700;
       line-height: 1.25;
       color: var(--text);
+      word-break: break-word;
     }
 
     .score-badge {
@@ -623,8 +696,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-width: 52px;
-      height: 52px;
+      min-width: 50px;
+      height: 50px;
       border-radius: 12px;
       font-family: var(--font-display);
       font-weight: 800;
@@ -634,12 +707,12 @@
     }
 
     .score-num {
-      font-size: 20px;
+      font-size: 19px;
       letter-spacing: -0.02em;
     }
 
     .score-label {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -675,13 +748,14 @@
     .decisor-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
+      gap: 5px;
+      padding: 4px 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
       margin-bottom: 12px;
       align-self: flex-start;
+      max-width: 100%;
     }
 
     .decisor-local {
@@ -714,9 +788,9 @@
     .meta-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      font-size: 13px;
-      margin-bottom: 16px;
+      gap: 7px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
     }
 
     .meta-item {
@@ -724,6 +798,7 @@
       align-items: center;
       gap: 8px;
       color: var(--text-muted);
+      flex-wrap: wrap;
     }
 
     .meta-item svg {
@@ -737,7 +812,7 @@
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .meta-link:hover {
@@ -764,7 +839,7 @@
     .rating-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       color: #f59e0b;
       font-weight: 700;
     }
@@ -775,7 +850,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       position: relative;
     }
 
@@ -788,18 +863,18 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--accent);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .ai-line-1 {
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--text);
       line-height: 1.45;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .ai-line-2 {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
       line-height: 1.4;
       font-style: italic;
@@ -807,40 +882,50 @@
 
     /* CARD FOOTER ACTIONS */
     .card-actions {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+      gap: 6px;
       margin-bottom: 14px;
     }
 
     .card-actions .btn {
-      flex: 1;
-      font-size: 12px;
-      padding: 7px 10px;
+      padding: 7px 8px;
+      font-size: 11.5px;
+      min-height: 36px;
     }
 
     /* CRM SECTION */
     .crm-section {
       background: var(--badge-bg);
       border-top: 1px solid var(--border);
-      margin: 0 -22px -22px;
-      padding: 14px 22px;
+      margin: 0 calc(-1 * clamp(16px, 2.5vw, 22px)) calc(-1 * clamp(16px, 2.5vw, 22px));
+      padding: 14px clamp(16px, 2.5vw, 22px);
       border-radius: 0 0 18px 18px;
     }
 
-    .crm-call-row {
+    .crm-contact-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .crm-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
     }
 
     .crm-checkbox {
       appearance: none;
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 19px;
+      height: 19px;
       border: 2px solid var(--border);
-      border-radius: 5px;
+      border-radius: 6px;
       background: var(--bg-card);
       cursor: pointer;
       display: inline-flex;
@@ -848,6 +933,7 @@
       justify-content: center;
       transition: var(--transition);
       position: relative;
+      flex-shrink: 0;
     }
 
     .crm-checkbox:checked {
@@ -866,14 +952,13 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--text);
-      cursor: pointer;
-      user-select: none;
     }
 
     .crm-timestamp {
       font-size: 11px;
       color: var(--text-dim);
       margin-left: auto;
+      white-space: nowrap;
     }
 
     .crm-notes-input {
@@ -904,43 +989,45 @@
     /* EMPTY STATE */
     .empty-state {
       text-align: center;
-      padding: 60px 20px;
+      padding: 50px 20px;
       color: var(--text-muted);
       grid-column: 1 / -1;
     }
 
     .empty-icon {
-      font-size: 40px;
-      margin-bottom: 12px;
+      font-size: 38px;
+      margin-bottom: 10px;
     }
 
     /* FOOTER */
     footer {
       border-top: 1px solid var(--border);
-      padding: 32px 0;
+      padding: 28px 0;
       text-align: center;
       color: var(--text-dim);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     /* TOAST */
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 20px;
+      right: 20px;
+      left: auto;
+      max-width: calc(100vw - 40px);
       background: var(--bg-card);
       border: 1px solid var(--primary);
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       color: var(--text);
-      padding: 10px 18px;
+      padding: 9px 16px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
       z-index: 1000;
-      transform: translateY(100px);
+      transform: translateY(80px);
       opacity: 0;
       transition: var(--transition);
       pointer-events: none;
@@ -951,36 +1038,44 @@
       opacity: 1;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 1024px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .toolbar-top {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .toolbar-top {
-        grid-template-columns: 1fr;
-      }
-      .chart-bar-row {
-        grid-template-columns: 140px 1fr 50px;
-      }
-      .leads-grid {
-        grid-template-columns: 1fr;
-      }
+    /* MOBILE EXTRA REFINEMENTS */
+    @media (max-width: 640px) {
       .top-bar-inner {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+      }
+      .brand-wrap {
+        justify-content: flex-start;
       }
       .nav-actions {
         width: 100%;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .nav-actions .btn {
+        width: 100%;
+      }
+      .chart-bar-row {
+        grid-template-columns: 105px 1fr 50px;
+        gap: 6px;
+      }
+      .toolbar-bottom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .crm-progress-wrap {
+        margin-left: 0;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .crm-progress-bar {
+        width: 140px;
+      }
+      .toast {
+        left: 20px;
+        right: 20px;
+        justify-content: center;
       }
     }
   </style>
@@ -994,14 +1089,14 @@
         <div class="brand-logo">BH</div>
         <div class="brand-text">
           <h1>BusinessHub · GDL Sur</h1>
-          <p>Directorio Estratégico de Leads con Citas</p>
+          <p>Prospección y Contacto de Negocios</p>
         </div>
       </div>
       <div class="nav-actions">
         <button class="btn" id="themeToggle" title="Cambiar tema">
           <span id="themeIcon">☀️</span> Modo Claro
         </button>
-        <button class="btn" id="exportCsvBtn" title="Descargar base con notas de llamada">
+        <button class="btn" id="exportCsvBtn" title="Descargar base con notas de contacto">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exportar CSV
         </button>
@@ -1014,11 +1109,11 @@
     <section class="hero">
       <div class="badge-agency">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-        Prospecting Intelligence System
+        Prospección y Contacto Multicanal
       </div>
       <h2 class="hero-title">Negocios con Citas en Guadalajara Sur</h2>
       <p class="hero-subtitle">
-        Santa Cruz del Valle y zonas colindantes. Extracción directa de Google Maps, lectura de fichas y reseñas por IA para calificar decisores y preparar llamadas de venta.
+        Santa Cruz del Valle y zonas colindantes. Extracción de Google Maps con análisis IA de decisores para preparar tu contacto (en persona, WhatsApp o llamada).
       </p>
 
       <!-- 4 STATS -->
@@ -1026,7 +1121,7 @@
         <div class="stat-card">
           <span class="stat-label">Total Empresas</span>
           <span class="stat-value" id="statTotal">194</span>
-          <span class="stat-desc">190 con teléfono (98% del total)</span>
+          <span class="stat-desc">190 con contacto verificado (98%)</span>
         </div>
 
         <div class="stat-card">
@@ -1038,7 +1133,7 @@
         <div class="stat-card">
           <span class="stat-label">Reseñas Sumadas</span>
           <span class="stat-value" id="statReviews">8,967</span>
-          <span class="stat-desc">Opiniones y feedback analizados</span>
+          <span class="stat-desc">Opiniones y reputación analizadas</span>
         </div>
 
         <div class="stat-card">
@@ -1054,7 +1149,7 @@
       <div class="chart-header">
         <div class="chart-title-wrap">
           <h3 id="chartTitle">Reparto de Empresas por Zona del Sur</h3>
-          <p>Haz clic en cualquier barra para filtrar el listado instantáneamente</p>
+          <p>Toca cualquier barra para filtrar el listado instantáneamente</p>
         </div>
         <div class="chart-tabs">
           <button class="chart-tab active" data-chart="zona">Por Zona</button>
@@ -1074,7 +1169,7 @@
           <div class="search-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
-          <input type="text" class="input-field" id="searchInput" placeholder="Buscar por nombre, teléfono, servicio o palabras del resumen IA...">
+          <input type="text" class="input-field" id="searchInput" placeholder="Buscar por nombre, teléfono, servicio o palabras clave...">
         </div>
 
         <select class="select-field" id="zoneFilter">
@@ -1102,12 +1197,12 @@
           <button class="pill-btn" data-pill-web="con_web">Con Sitio Web</button>
           <button class="pill-btn" data-pill-web="redes">Redes Sociales</button>
           <button class="pill-btn" data-pill-web="sin_web">Sin Web (Oportunidad)</button>
-          <button class="pill-btn" data-pill-status="llamados">Solo Llamados</button>
+          <button class="pill-btn" data-pill-status="contactados">Solo Contactados</button>
           <button class="pill-btn" data-pill-status="pendientes">Pendientes</button>
         </div>
 
         <div class="crm-progress-wrap">
-          <span id="crmProgressText">0 / 194 llamados (0%)</span>
+          <span id="crmProgressText">0 / 194 contactados (0%)</span>
           <div class="crm-progress-bar">
             <div class="crm-progress-fill" id="crmProgressFill"></div>
           </div>
@@ -1123,12 +1218,12 @@
 
   <footer>
     <div class="container">
-      <p>BusinessHub · Prospección Inteligente de Negocios en el Sur de Guadalajara. Datos sincronizados con Google Maps y persistencia local.</p>
+      <p>BusinessHub · Prospección y Contacto Comercial en el Sur de Guadalajara. Datos sincronizados con Google Maps y persistencia local.</p>
     </div>
   </footer>
 
   <div class="toast" id="toastBox">
-    <span>✓</span> <span id="toastMsg">Copiado al portapapeles</span>
+    <span>✓</span> <span id="toastMsg">Actualizado con éxito</span>
   </div>
 
   <!-- EMBEDDED DATASET -->
@@ -1150,7 +1245,7 @@
       zone: '',
       category: '',
       webType: '',
-      status: '', // 'llamados' | 'pendientes' | ''
+      status: '', // 'contactados' | 'pendientes' | ''
       sortBy: 'score_desc',
       chartView: 'zona'
     };
@@ -1342,9 +1437,9 @@
         }
 
         // Status
-        const isCalled = crmState[l.id]?.called;
-        if (activeFilter.status === 'llamados' && !isCalled) return false;
-        if (activeFilter.status === 'pendientes' && isCalled) return false;
+        const isContacted = crmState[l.id]?.contacted;
+        if (activeFilter.status === 'contactados' && !isContacted) return false;
+        if (activeFilter.status === 'pendientes' && isContacted) return false;
 
         return true;
       });
@@ -1368,17 +1463,17 @@
           <div class="empty-state">
             <div class="empty-icon">🔍</div>
             <h3>No se encontraron empresas con los filtros aplicados</h3>
-            <p>Intenta cambiar los términos de búsqueda o restablecer los filtros de zona y categoría.</p>
+            <p>Intenta cambiar los términos de búsqueda o restablecer los filtros de zona y giro.</p>
           </div>
         `;
         return;
       }
 
       leadsGrid.innerHTML = filtered.map(lead => {
-        const crmItem = crmState[lead.id] || { called: false, notes: '', date: '' };
-        const isCalled = crmItem.called;
+        const crmItem = crmState[lead.id] || { contacted: false, notes: '', date: '' };
+        const isContacted = crmItem.contacted;
         const notes = crmItem.notes || '';
-        const callDate = crmItem.date ? new Date(crmItem.date).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+        const contactDate = crmItem.date ? new Date(crmItem.date).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
 
         let scoreClass = 'score-high';
         if (lead.perfilDecisorTipo === 'franquicia') scoreClass = 'score-franchise';
@@ -1396,6 +1491,17 @@
           decisorIcon = '🏬';
         }
 
+        // WhatsApp Link
+        let waBtn = '';
+        if (lead.phone) {
+          let waDigits = lead.phone.replace(/\D/g, '');
+          if (waDigits.length === 10) waDigits = '52' + waDigits;
+          const waUrl = `https://wa.me/${waDigits}?text=${encodeURIComponent('Hola, buenas tardes!')}`;
+          waBtn = `<a href="${waUrl}" target="_blank" rel="noopener" class="btn btn-wa" title="Enviar WhatsApp al negocio">
+            💬 WhatsApp
+          </a>`;
+        }
+
         // Web Tag
         let webBadge = '';
         if (lead.tieneWeb) {
@@ -1407,7 +1513,7 @@
         }
 
         return `
-          <div class="lead-card ${isCalled ? 'is-called' : ''}" id="card_${lead.id}">
+          <div class="lead-card ${isContacted ? 'is-contacted' : ''}" id="card_${lead.id}">
             <div class="card-top">
               <div class="card-title-group">
                 <span class="lead-category">${escapeHtml(lead.category)}</span>
@@ -1449,34 +1555,36 @@
             <div class="ai-box">
               <div class="ai-box-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                Análisis IA para Llamada
+                Análisis IA para Contacto Comercial
               </div>
               <p class="ai-line-1">${escapeHtml(lead.resumenLinea1)}</p>
               <p class="ai-line-2">${escapeHtml(lead.resumenLinea2)}</p>
             </div>
 
             <div class="card-actions">
-              <a href="${escapeHtml(lead.mapsUrl)}" target="_blank" rel="noopener" class="btn btn-primary" title="Abrir ficha en Google Maps">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Ficha Maps
+              <a href="${escapeHtml(lead.mapsUrl)}" target="_blank" rel="noopener" class="btn btn-primary" title="Abrir ficha y ubicación en Google Maps">
+                📍 Maps
               </a>
               ${lead.phone ? `
                 <a href="tel:${escapeHtml(lead.phone)}" class="btn" title="Llamar directamente">
                   📞 Llamar
                 </a>
               ` : ''}
+              ${waBtn}
             </div>
 
             <!-- CRM Section -->
             <div class="crm-section">
-              <div class="crm-call-row">
-                <input type="checkbox" class="crm-checkbox" id="chk_${lead.id}" ${isCalled ? 'checked' : ''} onchange="toggleCalled('${lead.id}', this.checked)">
-                <label class="crm-label" for="chk_${lead.id}">
-                  ${isCalled ? '✓ Empresa llamada' : 'Marcar como llamada'}
+              <div class="crm-contact-row">
+                <label class="crm-checkbox-label" for="chk_${lead.id}">
+                  <input type="checkbox" class="crm-checkbox" id="chk_${lead.id}" ${isContacted ? 'checked' : ''} onchange="toggleContacted('${lead.id}', this.checked)">
+                  <span class="crm-label">
+                    ${isContacted ? '✓ Negocio contactado' : 'Marcar como contactado'}
+                  </span>
                 </label>
-                <span class="crm-timestamp" id="time_${lead.id}">${callDate}</span>
+                <span class="crm-timestamp" id="time_${lead.id}">${contactDate}</span>
               </div>
-              <textarea class="crm-notes-input" id="note_${lead.id}" placeholder="Escribe notas de la llamada (quién contestó, objeciones, fecha de próxima llamada...)" oninput="debouncedSaveNote('${lead.id}', this.value)">${escapeHtml(notes)}</textarea>
+              <textarea class="crm-notes-input" id="note_${lead.id}" placeholder="Notas de contacto (visita presencial, llamada, WhatsApp, quién atendió, objeciones, seguimiento...)" oninput="debouncedSaveNote('${lead.id}', this.value)">${escapeHtml(notes)}</textarea>
             </div>
           </div>
         `;
@@ -1484,18 +1592,18 @@
     }
 
     // CRM Actions
-    function toggleCalled(id, checked) {
-      if (!crmState[id]) crmState[id] = { called: false, notes: '', date: '' };
-      crmState[id].called = checked;
+    function toggleContacted(id, checked) {
+      if (!crmState[id]) crmState[id] = { contacted: false, notes: '', date: '' };
+      crmState[id].contacted = checked;
       crmState[id].date = checked ? new Date().toISOString() : '';
       
       saveCrmState();
 
       const card = document.getElementById(`card_${id}`);
       if (card) {
-        card.classList.toggle('is-called', checked);
+        card.classList.toggle('is-contacted', checked);
         const label = card.querySelector('.crm-label');
-        if (label) label.textContent = checked ? '✓ Empresa llamada' : 'Marcar como llamada';
+        if (label) label.textContent = checked ? '✓ Negocio contactado' : 'Marcar como contactado';
         const timeEl = document.getElementById(`time_${id}`);
         if (timeEl) {
           timeEl.textContent = checked ? new Date().toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
@@ -1503,17 +1611,17 @@
       }
 
       updateProgress();
-      showToast(checked ? 'Empresa marcada como llamada' : 'Llamada desmarcada');
+      showToast(checked ? 'Negocio marcado como contactado' : 'Contacto desmarcado');
     }
 
     let noteDebounceTimer = null;
     function debouncedSaveNote(id, text) {
       clearTimeout(noteDebounceTimer);
       noteDebounceTimer = setTimeout(() => {
-        if (!crmState[id]) crmState[id] = { called: false, notes: '', date: '' };
+        if (!crmState[id]) crmState[id] = { contacted: false, notes: '', date: '' };
         crmState[id].notes = text;
         saveCrmState();
-        showToast('Nota guardada');
+        showToast('Nota de contacto guardada');
       }, 400);
     }
 
@@ -1526,10 +1634,10 @@
     }
 
     function updateProgress() {
-      const calledCount = Object.values(crmState).filter(c => c.called).length;
+      const contactedCount = Object.values(crmState).filter(c => c.contacted).length;
       const total = LEADS_DATA.length;
-      const pct = Math.round((calledCount / total) * 100);
-      crmProgressText.textContent = `${calledCount} / ${total} llamadas (${pct}%)`;
+      const pct = Math.round((contactedCount / total) * 100);
+      crmProgressText.textContent = `${contactedCount} / ${total} contactados (${pct}%)`;
       crmProgressFill.style.width = `${pct}%`;
     }
 
@@ -1559,7 +1667,7 @@
       const headers = [
         'ID', 'Puntuación', 'Nombre', 'Categoría', 'Teléfono', 'Zona', 'Municipio',
         'Valoración', 'Reseñas', 'Tiene Web', 'Enlace Maps', 'Perfil Decisor',
-        'Llamado', 'Fecha Llamada', 'Notas de Llamada'
+        'Contactado', 'Fecha Contacto', 'Notas de Contacto'
       ];
 
       const rows = LEADS_DATA.map(l => {
@@ -1577,13 +1685,13 @@
           l.tieneWeb ? 'Sí' : 'No',
           `"${escapeCsv(l.mapsUrl)}"`,
           `"${escapeCsv(l.perfilDecisor)}"`,
-          crm.called ? 'Sí' : 'No',
+          crm.contacted ? 'Sí' : 'No',
           `"${escapeCsv(crm.date || '')}"`,
           `"${escapeCsv(crm.notes || '')}"`
         ].join(',');
       });
 
-      const csvBlob = new Blob(['﻿' + [headers.join(','), ...rows].join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const csvBlob = new Blob(['\uFEFF' + [headers.join(','), ...rows].join('\r\n')], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(csvBlob);
       link.download = `leads_gdl_sur_crm_${new Date().toISOString().slice(0, 10)}.csv`;

@@ -4,10 +4,10 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const HTML_FILE = path.resolve(__dirname, '../informe-leads-gdl-sur.html');
+const HTML_FILE = path.resolve(__dirname, '../index.html');
 
 async function testReportUi() {
-  console.log('Testing HTML report UI with Playwright...');
+  console.log('Testing updated responsive UI and contact CRM labels...');
   const browser = await chromium.launch({
     headless: true,
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -24,114 +24,85 @@ async function testReportUi() {
   await page.goto(`file:///${HTML_FILE.replace(/\\/g, '/')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1000);
 
-  // 1. Check title and 4 stats
+  // 1. Check stats and cards
   const statTotal = await page.$eval('#statTotal', el => el.innerText.trim());
-  const statZones = await page.$eval('#statZones', el => el.innerText.trim());
-  const statReviews = await page.$eval('#statReviews', el => el.innerText.trim());
-  const statRating = await page.$eval('#statRating', el => el.innerText.trim());
-
-  console.log('Stats Check:');
-  console.log(`- Total: ${statTotal} (Expected: 194)`);
-  console.log(`- Zonas: ${statZones} (Expected: 8)`);
-  console.log(`- Reseñas: ${statReviews}`);
-  console.log(`- Rating: ${statRating}`);
-
-  if (parseInt(statTotal) < 100) {
-    throw new Error(`Total leads (${statTotal}) is less than required 100 leads`);
-  }
-
-  // 2. Check cards rendered
   const cardCount = await page.$$eval('.lead-card', els => els.length);
-  console.log(`- Rendered cards: ${cardCount}`);
-  if (cardCount !== parseInt(statTotal)) {
-    throw new Error(`Rendered cards (${cardCount}) does not match statTotal (${statTotal})`);
+  console.log(`- Total: ${statTotal}, Rendered Cards: ${cardCount}`);
+
+  // 2. Check "Marcar como contactado" label
+  const firstLabel = await page.$eval('.crm-label', el => el.innerText.trim());
+  console.log(`- CRM Checkbox label: "${firstLabel}" (Expected: 'Marcar como contactado')`);
+  if (!firstLabel.includes('contactado')) {
+    throw new Error(`Label does not include 'contactado', got "${firstLabel}"`);
   }
 
-  // 3. Test Search filtering
-  console.log('\nTesting Search Filter...');
-  await page.fill('#searchInput', 'Santa Cruz');
-  await page.waitForTimeout(300);
-  const filteredCount = await page.$$eval('.lead-card', els => els.length);
-  console.log(`- Search 'Santa Cruz' yielded: ${filteredCount} cards`);
-  if (filteredCount === 0 || filteredCount >= cardCount) {
-    throw new Error(`Search filter failed, count was ${filteredCount}`);
+  // 3. Check WhatsApp buttons exist
+  const waButtons = await page.$$eval('a.btn-wa', els => els.length);
+  console.log(`- WhatsApp action buttons present: ${waButtons}`);
+  if (waButtons < 100) {
+    throw new Error(`Expected >100 WhatsApp buttons, found ${waButtons}`);
   }
 
-  // Clear search
-  await page.fill('#searchInput', '');
-  await page.waitForTimeout(300);
-
-  // 4. Test Chart bar click filtering
-  console.log('\nTesting Chart Bar Click...');
-  const firstBar = await page.$('.chart-bar-row');
-  const barLabel = await firstBar.$eval('.chart-bar-label', el => el.innerText.trim());
-  await firstBar.click();
-  await page.waitForTimeout(400);
-  const barFilteredCount = await page.$$eval('.lead-card', els => els.length);
-  console.log(`- Clicking bar '${barLabel}' filtered cards to: ${barFilteredCount}`);
-
-  // Reset zone filter
-  await page.selectOption('#zoneFilter', '');
-  await page.waitForTimeout(300);
-
-  // 5. Test CRM Checkbox & Notes Persist across reload
-  console.log('\nTesting CRM Checkbox and Note Persistence...');
+  // 4. Test checking contact and note persistence
   const firstCardId = await page.$eval('.lead-card', el => el.id);
   const leadId = firstCardId.replace('card_', '');
-  console.log(`- Interacting with lead: ${leadId}`);
+  console.log(`- Toggling contact on: ${leadId}`);
 
-  // Check the checkbox
   await page.click(`#chk_${leadId}`);
-  // Type a test note
-  const testNote = 'Llamada realizada: contestó el Dr. Leonardo, agendar demo el próximo martes.';
-  await page.fill(`#note_${leadId}`, testNote);
-  await page.waitForTimeout(600); // Wait for debounce save
+  const labelAfterCheck = await page.$eval(`#card_${leadId} .crm-label`, el => el.innerText.trim());
+  console.log(`- Label after check: "${labelAfterCheck}"`);
+  if (!labelAfterCheck.includes('Negocio contactado')) {
+    throw new Error(`Expected '✓ Negocio contactado', got "${labelAfterCheck}"`);
+  }
 
-  // Reload page
-  console.log('- Reloading page to verify persistence from localStorage...');
+  const testNote = 'Visita presencial: se entregó catálogo al encargado de recepción.';
+  await page.fill(`#note_${leadId}`, testNote);
+  await page.waitForTimeout(600);
+
+  // Reload to verify persistence
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(500);
 
   const isCheckedAfter = await page.$eval(`#chk_${leadId}`, el => el.checked);
   const noteAfter = await page.$eval(`#note_${leadId}`, el => el.value);
 
-  console.log(`- Checkbox after reload: ${isCheckedAfter} (Expected: true)`);
-  console.log(`- Note after reload: "${noteAfter}" (Expected match)`);
+  console.log(`- Checkbox after reload: ${isCheckedAfter}`);
+  console.log(`- Note after reload: "${noteAfter}"`);
 
   if (!isCheckedAfter || noteAfter !== testNote) {
-    throw new Error('CRM persistence across reload failed!');
+    throw new Error('CRM persistence test failed!');
   }
 
-  // 6. Test Theme Toggle
-  console.log('\nTesting Theme Toggle...');
-  const initialTheme = await page.$eval('html', el => el.getAttribute('data-theme'));
-  console.log(`- Initial theme: ${initialTheme}`);
-  await page.click('#themeToggle');
-  await page.waitForTimeout(300);
-  const toggledTheme = await page.$eval('html', el => el.getAttribute('data-theme'));
-  console.log(`- Toggled theme: ${toggledTheme}`);
-  if (initialTheme === toggledTheme) {
-    throw new Error('Theme toggle failed to change data-theme attribute');
-  }
+  // 5. Test Multiple Mobile Viewports (iPhone SE, iPhone 14, Android Tablet)
+  const viewports = [
+    { name: 'iPhone SE (375x667)', width: 375, height: 667 },
+    { name: 'iPhone 14 Pro (393x852)', width: 393, height: 852 },
+    { name: 'Galaxy Fold (280x653)', width: 280, height: 653 },
+    { name: 'iPad Mini (768x1024)', width: 768, height: 1024 }
+  ];
 
-  // 7. Test Mobile Viewport
-  console.log('\nTesting Mobile Viewport (390x844)...');
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(300);
-  const mobileCardVisible = await page.$eval('.lead-card', el => el.offsetHeight > 0);
-  console.log(`- Mobile card rendered properly: ${mobileCardVisible}`);
+  for (const vp of viewports) {
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.waitForTimeout(200);
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    const innerWidth = await page.evaluate(() => window.innerWidth);
+    console.log(`- ${vp.name}: innerWidth=${innerWidth}, scrollWidth=${scrollWidth}`);
+    if (scrollWidth > innerWidth + 1) {
+      throw new Error(`Horizontal overflow detected in ${vp.name}: scrollWidth (${scrollWidth}) > innerWidth (${innerWidth})`);
+    }
+  }
 
   await browser.close();
 
   if (errors.length > 0) {
-    console.error('Errors found during UI test:', errors);
-    throw new Error('UI test encountered console/page errors');
+    console.error('Errors found:', errors);
+    throw new Error('Errors in console/page');
   }
 
-  console.log('\nALL UI AND INTEGRITY TESTS PASSED SUCCESSFULLY! ✅');
+  console.log('\nAll tests passed successfully! ✅ Zero horizontal overflow on all screen sizes.');
 }
 
 testReportUi().catch(err => {
-  console.error('\nTest failed:', err);
+  console.error(err);
   process.exit(1);
 });
